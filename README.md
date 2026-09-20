@@ -321,3 +321,30 @@ All screens now follow a consistent layout:
 
 - Added 1.5s hold and `LCD_Clear()` after PWM/PPS save notifications so the
   message is readable and no ghost characters remain on screen afterward.
+
+
+
+## Screen Examples
+
+![LCD1](./doc/PXL_20260920_221244060.jpg)
+
+![LCD2](./doc/PXL_20260920_221255302.jpg)
+
+![LCD3](./doc/PXL_20260920_221259618.jpg)
+
+![LCD4](./doc/PXL_20260920_221304132.jpg)
+
+![LCD5](./doc/PXL_20260920_221309003.jpg)
+
+![LCD6](./doc/PXL_20260920_221313538.jpg)
+
+![LCD7](./doc/PXL_20260920_221318298.jpg)
+
+![LCD8](./doc/PXL_20260920_221325400.jpg)
+
+![LCD9](./doc/PXL_20260920_221330048.jpg)
+
+![LCD10](./doc/PXL_20260920_221333753.jpg)
+
+![LCD12](./doc/PXL_20260920_221337725.jpg)
+
