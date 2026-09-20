@@ -2,13 +2,16 @@
 
 This is an alternative firmware for the BH3SAP GPSDO sold on various platforms.
 
+NOTE: some display format changes were made for the sercona/lw version!  Read the section at the end; the screen captures from the original upstream fork have been changed, slightly.
+
+
 ![Image of the GPSDO running this firmware](./doc/gpsdo.jpg)
 
 ### Firmware Variants
 
 There are two firmware variants:
-- `AutoSave` � settings are saved to flash memory automatically.
-- `NoAutoSave` � settings are stored in RAM and are not saved automatically, minimizing MCU flash writes. This variant provides a `Save Settings` menu item that allows the user to store the settings permanently in flash memory.
+- `AutoSave` – settings are saved to flash memory automatically.
+- `NoAutoSave` – settings are stored in RAM and are not saved automatically, minimizing MCU flash writes. This variant provides a `Save Settings` menu item that allows the user to store the settings permanently in flash memory.
 
 ### Usage
 
@@ -262,7 +265,7 @@ Forked from ESS-1/gpsdo-fw (v0.1.18 / 0.1.22). Version string shows as `.1.22/lw
 ### Hardware tested
 
 - BH3SAP v1.20 board
-- OX256B-T-LU-V-10M OCXO (Chinese, not Isotemp — works fine on original wire position)
+- OX256B-T-LU-V-10M OCXO (Chinese, not Isotemp â€” works fine on original wire position)
 - ATGM336H-5N31 GPS module (GPS + BeiDou + GLONASS)
 - STM32F103C8T6 bluepill (128KB flash silicon)
 
@@ -286,7 +289,7 @@ read at a glance.
 
 - Replaced with a static padlock icon in custom char slot 1 only.
 - Icon switches between open (unlocked) and closed (locked) only when PPB lock
-  status changes — no flicker.
+  status changes â€” no flicker.
 - Unlocked: open shackle (right leg dropped). Locked: closed shackle.
 - 3-wide arch on 5-wide body with keyhole, full 8 rows tall.
 
