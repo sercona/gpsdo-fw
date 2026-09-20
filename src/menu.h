@@ -5,11 +5,11 @@
 #include "int.h"
 
 // Char code for sat icons
-#define SAT_ICON_1_CODE         '-'//0x7F
+#define SAT_ICON_1_CODE         'T'
 #define SAT_ICON_2_CODE         '='//'-'
 #define SAT_ICON_3_CODE         0xC6//0x7E
 // Char code for no sat icon
-#define NO_SAT_ICON_CODE        0x04
+#define NO_SAT_ICON_CODE        0x01
 #define NO_SAT_STD_ICON_CODE    '!'
 // Char codes for trend view
 #define TREND_LEFT_CODE         0x7F

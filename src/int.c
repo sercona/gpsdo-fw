@@ -290,8 +290,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef* htim)
         // Update last PPS time
         last_pps         = current_tick;
         // Update state icon
-        current_state_icon = spinner[pps_spinner];
-        pps_spinner   = (pps_spinner + 1) % strlen(spinner);
+        current_state_icon = 1;
         refresh_screen = true;
         update_trend = allow_adjustment;
         if(!gps_lock_status)

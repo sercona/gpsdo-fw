@@ -57,27 +57,25 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     }
 }
 
-__extension__ const uint8_t sat_icons[][8] =      {   { 0b00000, 0b00000, 0b00000, 0b00000, 0b00000, 0b10000, 0b00000, 0b00000 },
-                                                      { 0b00000, 0b00000, 0b00000, 0b11000, 0b00100, 0b10100, 0b00000, 0b00000 },
-                                                      { 0b00000, 0b11100, 0b00010, 0b11001, 0b00101, 0b10101, 0b00000, 0b00000 },
-                                                      { 0b00000, 0b11101, 0b00010, 0b11001, 0b01101, 0b10101, 0b00000, 0b00000 },
-                                                      { 0b00000, 0b11100, 0b00010, 0b11001, 0b00101, 0b10101, 0b00000, 0b00000 },
+__extension__ const uint8_t sat_icons[][8] =      {   { 0b01110, 0b01010, 0b00010, 0b11111, 0b11111, 0b11011, 0b11111, 0b01110 },
+                                                      { 0b01110, 0b01010, 0b00010, 0b11111, 0b11111, 0b11011, 0b11111, 0b01110 },
+                                                      { 0b01110, 0b01010, 0b00010, 0b11111, 0b11111, 0b11011, 0b11111, 0b01110 },
+                                                      { 0b01110, 0b01010, 0b00010, 0b11111, 0b11111, 0b11011, 0b11111, 0b01110 },
+                                                      { 0b01110, 0b01010, 0b00010, 0b11111, 0b11111, 0b11011, 0b11111, 0b01110 },
                                                   };
 
-__extension__ const uint8_t sat_icons_lock[][8] = {   { 0b00010, 0b00111, 0b00111, 0b00000, 0b00000, 0b10000, 0b00000, 0b00000 },
-                                                      { 0b00010, 0b00111, 0b00111, 0b11000, 0b00100, 0b10100, 0b00000, 0b00000 },
-                                                      { 0b00010, 0b11111, 0b00111, 0b11001, 0b00101, 0b10101, 0b00000, 0b00000 },
-                                                      { 0b00000, 0b11101, 0b00010, 0b11001, 0b01101, 0b10101, 0b00000, 0b00000 },
-                                                      { 0b00000, 0b11100, 0b00010, 0b11001, 0b00101, 0b10101, 0b00000, 0b00000 },
+__extension__ const uint8_t sat_icons_lock[][8] = {   { 0b01110, 0b01010, 0b01010, 0b11111, 0b11111, 0b11011, 0b11111, 0b01110 },
+                                                      { 0b01110, 0b01010, 0b01010, 0b11111, 0b11111, 0b11011, 0b11111, 0b01110 },
+                                                      { 0b01110, 0b01010, 0b01010, 0b11111, 0b11111, 0b11011, 0b11111, 0b01110 },
+                                                      { 0b01110, 0b01010, 0b01010, 0b11111, 0b11111, 0b11011, 0b11111, 0b01110 },
+                                                      { 0b01110, 0b01010, 0b01010, 0b11111, 0b11111, 0b11011, 0b11111, 0b01110 },
                                                   };
 
 void lcd_create_chars()
 {
-    for (int i = 0; i < 5; i++) {
-        uint8_t custom_char[8];
-        memcpy(custom_char, ppb_lock_status ? sat_icons_lock[i] : sat_icons[i], sizeof(custom_char));
-        LCD_CreateChar(i+1, custom_char);
-    }
+    uint8_t custom_char[8];
+    memcpy(custom_char, ppb_lock_status ? sat_icons_lock[0] : sat_icons[0], sizeof(custom_char));
+    LCD_CreateChar(1, custom_char);
 }
 
 typedef enum { SCREEN_MAIN, SCREEN_DATE, SCREEN_DATE_TIME, SCREEN_TREND, SCREEN_PPB, SCREEN_PWM, SCREEN_GPS, SCREEN_UPTIME, SCREEN_FRAMES, SCREEN_CONTRAST, SCREEN_PPS, SCREEN_SAVE_CONFIG, SCREEN_VERSION, SCREEN_MAX } menu_screen;
@@ -440,7 +438,7 @@ static void menu_format_ppb_compact(int32_t ppb_signed, char* buffer, size_t buf
     } else if (ppb > 999) {
         snprintf(buffer, bufferSize, "%ld.%01ld", ppb / 100, ((ppb % 100)/10));
     } else {
-        snprintf(buffer, bufferSize, "%ld.%02ld", ppb / 100, ppb % 100);
+        snprintf(buffer, bufferSize, "%ld.%01ld", ppb / 100, (ppb % 100)/10);
     }
 }
 
@@ -461,7 +459,7 @@ static void menu_draw()
         // Main screen with satellites, ppb and UTC time
         menu_format_ppb_compact(frequency_get_ppb(), ppb_string, PPB_STRING_SIZE);
         snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "%02d %s", num_sats, ppb_string);
-        LCD_Puts(1, 0, screen_buffer);
+        LCD_Puts(2, 0, screen_buffer);
         if(current_menu_screen == SCREEN_MAIN)
         {
             LCD_Puts(0, 1, gps_time);
@@ -494,7 +492,7 @@ static void menu_draw()
         {
             menu_format_ppb_compact(frequency_get_ppb(), ppb_string, PPB_STRING_SIZE);
             snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "%02d %s", num_sats, ppb_string);
-            LCD_Puts(1, 0, screen_buffer);
+            LCD_Puts(2, 0, screen_buffer);
             menu_draw_trend(0);
         }
         else
@@ -507,7 +505,7 @@ static void menu_draw()
                     {
                         menu_format_ppb_compact(frequency_get_ppb(), ppb_string, PPB_STRING_SIZE);
                         snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "%02d/%s", num_sats, ppb_string);
-                        LCD_Puts(1, 0, screen_buffer);
+                        LCD_Puts(2, 0, screen_buffer);
                         menu_draw_trend(0);
                     }
                     else
@@ -520,27 +518,27 @@ static void menu_draw()
                     }
                     break;
                 case SCREEN_TREND_AUTO_V:
-                    LCD_Puts(1, 0, menu_level == 1 ? "Auto-V:":"Auto-V?");
+                    LCD_Puts(2, 0, menu_level == 1 ? "Auto-V":"Auto-V?");
                     LCD_Puts(0, 1, trend_auto_v ? "      ON" : "     OFF");
                     break;
                 case SCREEN_TREND_AUTO_H:
-                    LCD_Puts(1, 0, menu_level == 1 ? "Auto-H:":"Auto-H?");
+                    LCD_Puts(2, 0, menu_level == 1 ? "Auto-H":"Auto-H?");
                     LCD_Puts(0, 1, trend_auto_h ? "      ON" : "     OFF");
                     break;
                 case SCREEN_TREND_V_SCALE:
-                    LCD_Puts(1, 0, menu_level == 1 ? "V-Scal:":"V-Scal?");
+                    LCD_Puts(2, 0, menu_level == 1 ? "V-Scal":"V-Scal?");
                     LCD_Puts(0, 1, "        ");
                     snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "%ld.%02ld", trend_v_scale / 100, trend_v_scale % 100);
                     LCD_Puts(0, 1, screen_buffer);
                     break;
                 case SCREEN_TREND_H_SCALE:
-                    LCD_Puts(1, 0, menu_level == 1 ? "H-Scal:":"H-Scal?");
+                    LCD_Puts(2, 0, menu_level == 1 ? "H-Scal":"H-Scal?");
                     LCD_Puts(0, 1, "        ");
                     snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "%ld", trend_h_scale);
                     LCD_Puts(0, 1, screen_buffer);
                     break;
                 case SCREEN_TREND_EXIT:
-                    LCD_Puts(1, 0, "Exit?");
+                    LCD_Puts(2, 0, "Exit?");
                     LCD_Puts(0, 1, "        ");
                     break;
             }
@@ -551,7 +549,7 @@ static void menu_draw()
         if(menu_level == 0)
         {
             ppb = frequency_get_ppb();
-            LCD_Puts(1, 0, "PPB:   ");
+            LCD_Puts(2, 0, "PPB");
             LCD_Puts(0, 1, "        ");
             menu_format_ppb(ppb, screen_buffer, SCREEN_BUFFER_SIZE);
             LCD_Puts(0, 1, screen_buffer);
@@ -565,30 +563,30 @@ static void menu_draw()
                 default:
                 case SCREEN_PPB_MEAN:
                     ppb = frequency_get_ppb();
-                    LCD_Puts(1, 0, "Mean:");
+                    LCD_Puts(2, 0, "Mean");
                     menu_format_ppb(ppb, screen_buffer, SCREEN_BUFFER_SIZE);
                     LCD_Puts(0, 1, screen_buffer);
                     break;
                 case SCREEN_PPB_INST:
                     {
-                    LCD_Puts(1, 0, "Inst:");
+                    LCD_Puts(2, 0, "Inst");
                     int32_t ppb_inst = frequency_get_inst_ppb();
                     snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "%ld.%02d", ppb_inst / 100, abs(ppb_inst) % 100);
                     LCD_Puts(0, 1, screen_buffer);
                     }
                     break;
                 case SCREEN_PPB_FREQUENCY:
-                    LCD_Puts(1, 0, "Freq:");
+                    LCD_Puts(2, 0, "Freq");
                     snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "%ld", ppb_frequency);
                     LCD_Puts(0, 1, screen_buffer);
                     break;
                 case SCREEN_PPB_ERROR:
-                    LCD_Puts(1, 0, "Error:");
+                    LCD_Puts(2, 0, "Error");
                     snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "%ld", ppb_error);
                     LCD_Puts(0, 1, screen_buffer);
                     break;
                 case SCREEN_PPB_CORRECTION:
-                    LCD_Puts(1, 0, "Corr.:");
+                    LCD_Puts(2, 0, "Corr.");
                     if(frequency_adjustment_allowed())
                     {
                         snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "%ld", ppb_correction);
@@ -600,12 +598,12 @@ static void menu_draw()
                     }
                     break;
                 case SCREEN_PPB_PWM:
-                    LCD_Puts(1, 0, "PWM:");
+                    LCD_Puts(2, 0, "PWM");
                     snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "%ld", TIM1->CCR2);
                     LCD_Puts(0, 1, screen_buffer);
                     break;
                 case SCREEN_PPB_OCXO_MODEL:
-                    LCD_Puts(1, 0, menu_level == 1 ? "OCXO:":"OCXO?");
+                    LCD_Puts(2, 0, menu_level == 1 ? "OCXO":"OCXO?");
                     switch(ocxo_model)
                     {
                         case OCXO_MODEL_ISOTEMP:
@@ -621,12 +619,12 @@ static void menu_draw()
                     }
                     break;
                 case SCREEN_PPB_WARMUP_TIME:
-                    LCD_Puts(1, 0, menu_level == 1 ? "Warmup:":"Warmup?");
+                    LCD_Puts(2, 0, menu_level == 1 ? "Warmup":"Warmup?");
                     snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "%ld", warmup_time_seconds);
                     LCD_Puts(0, 1, screen_buffer);
                     break;
                 case SCREEN_PPB_ALGO:
-                    LCD_Puts(1, 0, menu_level == 1 ? "Algo.:":"Algo?");
+                    LCD_Puts(2, 0, menu_level == 1 ? "Algo.":"Algo?");
                     switch(displayed_correction_algorithm)
                     {
                         case CORRECTION_ALGO_DANKAR:
@@ -645,30 +643,30 @@ static void menu_draw()
                     }
                     break;
                 case SCREEN_PPB_CORRECTION_FACTOR:
-                    LCD_Puts(1, 0, menu_level == 1 ? "Corr.F:":"Corr.F?");
+                    LCD_Puts(2, 0, menu_level == 1 ? "Corr.F":"Corr.F?");
                     snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "%ld", correction_factor);
                     LCD_Puts(0, 1, screen_buffer);
                     break;
                 case SCREEN_PPB_MILLIS:
-                    LCD_Puts(1, 0, "Millis:");
+                    LCD_Puts(2, 0, "Millis");
                     snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "%ld", ppb_millis);
                     LCD_Puts(0, 1, screen_buffer);
                     break;
                 case SCREEN_PPB_AUTO_SAVE_PWM:
-                    LCD_Puts(1, 0, menu_level == 1 ? "PWM S.:":"PWM S.?");
+                    LCD_Puts(2, 0, menu_level == 1 ? "PWM S.":"PWM S.?");
                     LCD_Puts(0, 1, pwm_auto_save ? "      ON" : "     OFF");
                     break;
                 case SCREEN_PPB_AUTO_SYNC_PPS:
-                    LCD_Puts(1, 0, menu_level == 1 ? "PPS S.:":"PPS S.?");
+                    LCD_Puts(2, 0, menu_level == 1 ? "PPS S.":"PPS S.?");
                     LCD_Puts(0, 1, pps_ppm_auto_sync ? "      ON" : "     OFF");
                     break;
                 case SCREEN_PPB_LOCK_THRESHOLD:
-                    LCD_Puts(1, 0, menu_level == 1 ? "PPB Lk:":"PPB Lk?");
+                    LCD_Puts(2, 0, menu_level == 1 ? "PPB Lk":"PPB Lk?");
                     snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "%ld.%02ld", ppb_lock_threshold / 100, ppb_lock_threshold % 100);
                     LCD_Puts(0, 1, screen_buffer);
                     break;
                 case SCREEN_PPB_EXIT:
-                    LCD_Puts(1, 0, "Exit?");
+                    LCD_Puts(2, 0, "Exit?");
                     LCD_Puts(0, 1, "        ");
                     break;
             }
@@ -678,7 +676,7 @@ static void menu_draw()
         // Screen with current PPM
         if(menu_level == 0)
         {
-            LCD_Puts(1, 0, "PWM:   ");
+            LCD_Puts(2, 0, "PWM");
             LCD_Puts(0, 1, "        ");
             snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "%ld", TIM1->CCR2);
             LCD_Puts(0, 1, screen_buffer);
@@ -692,8 +690,8 @@ static void menu_draw()
     case SCREEN_GPS:
         if(menu_level == 0)
         {
-            snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "GPS:%02d\5", num_sats);
-            LCD_Puts(1, 0, screen_buffer);
+            snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "%02d GPS", num_sats);
+            LCD_Puts(2, 0, screen_buffer);
             LCD_Puts(0, 1, gps_time);
         }
         else
@@ -704,23 +702,23 @@ static void menu_draw()
             {
                 default:
                 case SCREEN_GPS_TIME:
-                    LCD_Puts(1, 0, "Time:");
+                    LCD_Puts(2, 0, "Time");
                     LCD_Puts(0, 1, gps_time);
                     break;
                 case SCREEN_GPS_LATITUDE:
                     snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "Lat.: %s", gps_n_s);
-                    LCD_Puts(1, 0, screen_buffer);
+                    LCD_Puts(2, 0, screen_buffer);
                     LCD_Puts(0, 1, gps_latitude);
                     break;
                 case SCREEN_GPS_LONGITUDE:
                     snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "Long.:%s", gps_e_w);
-                    LCD_Puts(1, 0, screen_buffer);
+                    LCD_Puts(2, 0, screen_buffer);
                     LCD_Puts(0, 1, gps_longitude);
                     break;
                 case SCREEN_GPS_LATITUDE_DEC:
                     {
                     snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "Lat.D:");
-                    LCD_Puts(1, 0, screen_buffer);
+                    LCD_Puts(2, 0, screen_buffer);
                     // TODO: rework; wrong format
                     const char *fmt = "%d.%d";
                     double gps_latitude_double_abs = gps_latitude_double;
@@ -738,7 +736,7 @@ static void menu_draw()
                 case SCREEN_GPS_LONGITUDE_DEC:
                     {
                     snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "Long.D:");
-                    LCD_Puts(1, 0, screen_buffer);
+                    LCD_Puts(2, 0, screen_buffer);
                     // TODO: rework; wrong format
                     const char *fmt = "%d.%d";
                     double gps_longitude_double_abs = gps_longitude_double;
@@ -755,7 +753,7 @@ static void menu_draw()
                     break;
                 case SCREEN_GPS_LOCATOR:
                     snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "Lcator:");
-                    LCD_Puts(1, 0, screen_buffer);
+                    LCD_Puts(2, 0, screen_buffer);
                     LCD_Puts(0, 1, gps_locator);
                     break;
                 case SCREEN_GPS_ALTITUDE:
@@ -763,7 +761,7 @@ static void menu_draw()
                         // TODO: rework; wrong format
                         double alt_int = floor(gps_msl_altitude);
                         double alt_frac = (gps_msl_altitude - alt_int)*10;
-                        LCD_Puts(1, 0, "Alt.:");
+                        LCD_Puts(2, 0, "Alt.");
                         snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "%d.%d", ((int)alt_int), ((int)alt_frac));
                         LCD_Puts(0, 1, screen_buffer);
                     }
@@ -773,50 +771,50 @@ static void menu_draw()
                         // TODO: rework; wrong format
                         double geoid_int = floor(gps_geoid_separation);
                         double geoid_frac = (gps_geoid_separation - geoid_int)*10;
-                        LCD_Puts(1, 0, "Geoid:");
+                        LCD_Puts(2, 0, "Geoid");
                         snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "%d.%d", ((int)geoid_int), ((int)geoid_frac));
                         LCD_Puts(0, 1, screen_buffer);
                     }
                     break;
                 case SCREEN_GPS_SATELITES:
-                    LCD_Puts(1, 0, "Sat. #:");
+                    LCD_Puts(2, 0, "Sat. #");
                     snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "%02d", num_sats);
                     LCD_Puts(0, 1, screen_buffer);
                     break;
                 case SCREEN_GPS_HDOP:
-                    LCD_Puts(1, 0, "HDOP:");
+                    LCD_Puts(2, 0, "HDOP");
                     LCD_Puts(0, 1, gps_hdop);
                     break;
                 case SCREEN_GPS_BAUDRATE:
-                    LCD_Puts(1, 0, menu_level == 1 ? "GPS BR:":"GPS BR?");
+                    LCD_Puts(2, 0, menu_level == 1 ? "GPS BR":"GPS BR?");
                     snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "%ld", gps_baudrate);
                     LCD_Puts(0, 1, screen_buffer);
                     break;
                 case SCREEN_GPS_COMM_BAUDRATE:
-                    LCD_Puts(1, 0, menu_level == 1 ? "PC BR:":"PC BR?");
+                    LCD_Puts(2, 0, menu_level == 1 ? "PC BR":"PC BR?");
                     snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "%ld", comm_baudrate);
                     LCD_Puts(0, 1, screen_buffer);
                     break;
                 case SCREEN_GPS_COMM_PGDOX_FRM:
-                    LCD_Puts(1, 0, menu_level == 1 ? "$PGDOx:" : "$PGDOx?");
+                    LCD_Puts(2, 0, menu_level == 1 ? "$PGDOx" : "$PGDOx?");
                     LCD_Puts(0, 1, gps_comm_send_pgdox ? "      ON" : "     OFF");
                     break;
                 case SCREEN_GPS_ERRORS:
-                    LCD_Puts(1, 0, "GPS Err");
+                    LCD_Puts(2, 0, "GPS Err");
                     snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "%ld/%ld/%ld", gps_invalid_frames, gps_fifo_overflow_gps, gps_fifo_overflow_comm);
                     LCD_Puts(0, 1, screen_buffer);
                     break;
                 case SCREEN_GPS_TIME_OFFSET:
-                    LCD_Puts(1, 0, menu_level == 1 ? "TZ ofs:":"TZ ofs?");
+                    LCD_Puts(2, 0, menu_level == 1 ? "TZ ofs":"TZ ofs?");
                     snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "%2d", (int)gps_time_offset);
                     LCD_Puts(0, 1, screen_buffer);
                     break;
                 case SCREEN_GPS_DATE_FORMAT:
-                    LCD_Puts(1, 0, menu_level == 1 ? "Dt Fmt:":"Dt fmt?");
+                    LCD_Puts(2, 0, menu_level == 1 ? "Dt Fmt":"Dt fmt?");
                     LCD_Puts(0, 1, (gps_date_format == DATE_FORMAT_UTC) ? "dd/mm/yy" : ((gps_date_format == DATE_FORMAT_US) ? "mm/dd/yy" : ((gps_date_format == DATE_FORMAT_ISO) ? "yy/mm/dd" : ((gps_date_format == DATE_FORMAT_UTC_DOT) ? "dd.mm.yy" : "yy-mm-dd"))));
                     break;
                 case SCREEN_GPS_MODEL:
-                    LCD_Puts(1, 0, menu_level == 1 ? "Model:":"Model?");
+                    LCD_Puts(2, 0, menu_level == 1 ? "Model":"Model?");
                     switch(gps_model)
                     {
                         case GPS_MODEL_ATGM336H:
@@ -835,7 +833,7 @@ static void menu_draw()
                     }
                     break;
                 case SCREEN_GPS_LAST_FRAME:
-                    LCD_Puts(1, 0, "Frame:");
+                    LCD_Puts(2, 0, "Frame");
                     LCD_Puts(0, 1, gps_last_frame);
                     if(gps_last_frame_changed)
                     {
@@ -844,26 +842,26 @@ static void menu_draw()
                     }
                     break;
                 case SCREEN_GPS_EXIT:
-                    LCD_Puts(1, 0, "Exit?");
+                    LCD_Puts(2, 0, "Exit?");
                     LCD_Puts(0, 1, "        ");
                     break;
             }
         }
         break;
     case SCREEN_UPTIME:
-        LCD_Puts(1, 0, "UPTIME:");
+        LCD_Puts(2, 0, "UPTIME");
         LCD_Puts(0, 1, "        ");
         snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "%ld", device_uptime);
         LCD_Puts(0, 1, screen_buffer);
         break;
     case SCREEN_FRAMES:
-        LCD_Puts(1, 0, "GGA FR:");
+        LCD_Puts(2, 0, "GGA FR");
         LCD_Puts(0, 1, "        ");
         snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "%ld", gga_frames);
         LCD_Puts(0, 1, screen_buffer);
         break;
     case SCREEN_CONTRAST:
-        LCD_Puts(1, 0, menu_level == 0 ? "CNTRST:":"CNTRST?");
+        LCD_Puts(2, 0, menu_level == 0 ? "CNTRST":"CNTRST?");
         LCD_Puts(0, 1, "        ");
         snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "%d", contrast);
         LCD_Puts(0, 1, screen_buffer);
@@ -874,8 +872,8 @@ static void menu_draw()
         LCD_Puts(0, 1, "        ");
         if(menu_level == 0)
         {
-            snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "PPS:%3ld", pps_sync_count);
-            LCD_Puts(1, 0, screen_buffer);
+            snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "PPS %3ld", pps_sync_count);
+            LCD_Puts(2, 0, screen_buffer);
             snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "%ld", pps_error);
             LCD_Puts(0, 1, screen_buffer);
         }
@@ -885,52 +883,52 @@ static void menu_draw()
             {
                 default:
                 case SCREEN_PPS_SHIFT:
-                    LCD_Puts(1, 0, "Shift:");
+                    LCD_Puts(2, 0, "Shift");
                     // Check we have enough space for minus sign
                     snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "%ld", (pps_error < -9999999) ? abs(pps_error) : pps_error);
                     LCD_Puts(0, 1, screen_buffer);
                     break;
                 case SCREEN_PPS_SHIFT_MS:
-                    LCD_Puts(1, 0, "Sft ms:");
+                    LCD_Puts(2, 0, "Sft ms");
                     // TODO: fix wrong format
                     snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "%ld.%04d", pps_millis / 10000, abs(pps_millis) % 10000);
                     LCD_Puts(0, 1, screen_buffer);
                     break;
                 case SCREEN_PPS_SYNC_COUNT:
-                    LCD_Puts(1, 0, "SynCnt:");
+                    LCD_Puts(2, 0, "SynCnt");
                     snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "%ld", pps_sync_count);
                     LCD_Puts(0, 1, screen_buffer);
                     break;
                 case SCREEN_PPS_SYNC_MODE:
-                    LCD_Puts(1, 0, menu_level == 1 ? "Sync.:":"Sync.?");
+                    LCD_Puts(2, 0, menu_level == 1 ? "Sync.":"Sync.?");
                     LCD_Puts(0, 1, pps_sync_on ? "      ON" : "     OFF");
                     break;
                 case SCREEN_PPS_SYNC_DELAY:
-                    LCD_Puts(1, 0, menu_level == 1 ? "Delay:":"Delay?");
+                    LCD_Puts(2, 0, menu_level == 1 ? "Delay":"Delay?");
                     snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "%ld", pps_sync_delay);
                     LCD_Puts(0, 1, screen_buffer);
                     break;
                 case SCREEN_PPS_SYNC_THRESHOLD:
-                    LCD_Puts(1, 0, menu_level == 1 ? "Thrsld:":"Thrsld?");
+                    LCD_Puts(2, 0, menu_level == 1 ? "Thrsld":"Thrsld?");
                     snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "%ld", pps_sync_threshold);
                     LCD_Puts(0, 1, screen_buffer);
                     break;
                 case SCREEN_PPS_FORCE_SYNC:
                     if(menu_level == 1)
                     {
-                        LCD_Puts(1, 0,  " Force ");
+                        LCD_Puts(2, 0, "Force");
                         LCD_Puts(0, 1, "  sync ?");
                     }
                     else
                     {
-                        LCD_Puts(1, 0,  " Forced");
+                        LCD_Puts(2, 0, "Forced");
                         LCD_Puts(0, 1, "  sync !");
                         sync_pps_out = true;
                         menu_level = 1;
                     }
                     break;
                 case SCREEN_PPS_EXIT:
-                    LCD_Puts(1, 0, "Exit?");
+                    LCD_Puts(2, 0, "Exit?");
                     LCD_Puts(0, 1, "        ");
                     break;
             }
@@ -940,7 +938,7 @@ static void menu_draw()
         //  Save configuration screen
         if(menu_level == 0)
         {
-            LCD_Puts(1, 0,  "Save   ");
+            LCD_Puts(2, 0, "Save");
             LCD_Puts(0, 1, "Settings");
         }
         else
@@ -952,7 +950,7 @@ static void menu_draw()
     case SCREEN_VERSION:
         if(menu_level == 0)
         {
-            LCD_Puts(1, 0, "Vers.:");
+            LCD_Puts(2, 0, "Vers.");
             // Add "/S" (Autosave feature enabled") or "/N" (no autosave)
             snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "%s/%s", FIRMWARE_VERSION, EEPROM_AUTO_SAVE ? "S" : "N");
             LCD_Puts(0, 1, screen_buffer);
@@ -1670,26 +1668,9 @@ void menu_run()
         refresh_screen = false;
 
         // Display state icon
-        if(current_menu_screen == SCREEN_TREND && (current_state_icon < 8))
+        if(current_menu_screen == SCREEN_TREND)
         {   // Don't use custom icon in trend screen since all 8 custom chars are used for graphic display
-            uint8_t icon;
-            switch (current_state_icon)
-            {
-                default:
-                case 1:
-                    icon = SAT_ICON_1_CODE;
-                    break;
-                case 2:
-                    icon = SAT_ICON_2_CODE;
-                    break;
-                case 3:
-                    icon = SAT_ICON_3_CODE;
-                    break;
-                case 4:
-                    icon = NO_SAT_STD_ICON_CODE;
-                    break;
-            }
-            LCD_PutCustom(0,0,icon);
+            LCD_PutCustom(0,0,SAT_ICON_1_CODE);
         }
         else
         {
@@ -1728,19 +1709,25 @@ void menu_run()
             }
             if(did_pps && did_pwm)
             {
+                LCD_Clear();
                 LCD_Puts(0, 0, "PPS&PWM ");
                 LCD_Puts(0, 1, " DONE!  ");
             }
             else if(did_pps)
             {
+                LCD_Clear();
                 LCD_Puts(0, 0, "  PPS   ");
                 LCD_Puts(0, 1, "SYNCED! ");
             }
             else if(did_pwm)
             {
+                LCD_Clear();
                 LCD_Puts(0, 0, "  PWM   ");
                 LCD_Puts(0, 1, EEPROM_AUTO_SAVE ? " SAVED! " : "  SET!  ");
             }
+            HAL_Delay(1500);
+            LCD_Clear();
+            menu_force_redraw();
         }
         bool new_ppb_lock_status = frequency_is_stable(ppb_lock_threshold);
         if(ppb_lock_status != new_ppb_lock_status )
