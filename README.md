@@ -250,3 +250,71 @@ It would be nice to have NMEA output over USB, and the Bluepill dev board in the
 Instead of using the USB, I have added GPS passthrough on an unused UART. Pins PA2 (TX) and PA3 (RX) can be used to communicate with the GPS module. This is bidirectional, so the GPS can be used by a computer or configured via manufacturer software.
 
 I ended up routing these two pins and ground to an external header on the backside of the device, and then plugging in a serial to USB converter when needed.
+
+---
+
+## Sercona / Linux-Works Fork
+
+This fork is available at: https://github.com/sercona/gpsdo-fw
+
+Forked from ESS-1/gpsdo-fw (v0.1.18 / 0.1.22). Version string shows as `.1.22/lw`.
+
+### Hardware tested
+
+- BH3SAP v1.20 board
+- OX256B-T-LU-V-10M OCXO (Chinese, not Isotemp — works fine on original wire position)
+- ATGM336H-5N31 GPS module (GPS + BeiDou + GLONASS)
+- STM32F103C8T6 bluepill (128KB flash silicon)
+
+### Build system changes
+
+- `CMakeLists.txt`: Release build by default, `EEPROM_AUTO_SAVE` defaults to 1,
+  post-build `arm-none-eabi-objcopy` generates `gpsdo.bin` automatically,
+  `make flash` target added using PlatformIO's bundled OpenOCD at
+  `~/.platformio/packages/tool-openocd`.
+- `STM32F103C8Tx_FLASH.ld`: Flash region set to 128K to match actual silicon
+  on all bluepill variants encountered. The original 64K limit caused link
+  failure in debug builds.
+
+### Display layout changes
+
+#### Lock/unlock icon
+
+The original animated radio-wave icon cycled through custom LCD character slots
+on every PPS pulse, causing visible flicker. The lock indicator was too small to
+read at a glance.
+
+- Replaced with a static padlock icon in custom char slot 1 only.
+- Icon switches between open (unlocked) and closed (locked) only when PPB lock
+  status changes — no flicker.
+- Unlocked: open shackle (right leg dropped). Locked: closed shackle.
+- 3-wide arch on 5-wide body with keyhole, full 8 rows tall.
+
+#### Top-line layout
+
+All screens now follow a consistent layout:
+
+```
+[icon] NN <label>
+```
+
+- Col 0: lock/unlock padlock icon
+- Col 1: blank separator
+- Col 2-3: satellite count (2 digits)
+- Col 4+: screen label
+
+#### Label cleanup
+
+- Removed trailing colons from all top-line labels.
+- GPS screen: sat count at col 2, `GPS` label right-aligned.
+- PPB compact format trimmed from `#.##` to `#.#`.
+
+#### Trend screen
+
+- Col 0 shows `T` (for Trend) instead of the stuck `-` character, since the
+  trend screen uses all 8 custom char slots for its graph.
+
+#### Notification messages
+
+- Added 1.5s hold and `LCD_Clear()` after PWM/PPS save notifications so the
+  message is readable and no ghost characters remain on screen afterward.
