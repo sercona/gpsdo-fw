@@ -326,6 +326,8 @@ All screens now follow a consistent layout:
 
 ## Screen Examples
 
+![LCD0](./doc/PXL_20260920_224719481.jpg)
+
 ![LCD1](./doc/PXL_20260920_221244060.jpg)
 
 ![LCD2](./doc/PXL_20260920_221255302.jpg)
@@ -347,4 +349,5 @@ All screens now follow a consistent layout:
 ![LCD10](./doc/PXL_20260920_221333753.jpg)
 
 ![LCD12](./doc/PXL_20260920_221337725.jpg)
+
 

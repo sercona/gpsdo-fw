@@ -1726,7 +1726,7 @@ void menu_run()
                 LCD_Puts(0, 0, "  PWM   ");
                 LCD_Puts(0, 1, EEPROM_AUTO_SAVE ? " SAVED! " : "  SET!  ");
             }
-            HAL_Delay(1500);
+            //HAL_Delay(1500);   // getting in the way, not needed
             LCD_Clear();
             menu_force_redraw();
         }
