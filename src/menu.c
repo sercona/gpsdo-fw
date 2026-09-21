@@ -1707,21 +1707,7 @@ void menu_run()
                 auto_sync_pps_done = true;
                 did_pps = true;
             }
-            if(did_pps && did_pwm)
-            {
-                LCD_Puts(0, 0, "PPS&PWM ");
-                LCD_Puts(0, 1, " DONE!  ");
-            }
-            else if(did_pps)
-            {
-                LCD_Puts(0, 0, "  PPS   ");
-                LCD_Puts(0, 1, "SYNCED! ");
-            }
-            else if(did_pwm)
-            {
-                LCD_Puts(0, 0, "  PWM   ");
-                LCD_Puts(0, 1, EEPROM_AUTO_SAVE ? " SAVED! " : "  SET!  ");
-            }
+            // Notifications suppressed - no popup on autosave or PPS sync
         }
         bool new_ppb_lock_status = frequency_is_stable(ppb_lock_threshold);
         if(ppb_lock_status != new_ppb_lock_status )
