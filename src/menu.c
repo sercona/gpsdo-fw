@@ -430,15 +430,20 @@ static void menu_format_ppb_compact(int32_t ppb_signed, char* buffer, size_t buf
     int32_t ppb = abs(ppb_signed);
 
     if (ppb == PPB_UNSET_VALUE) {
-        snprintf(buffer, bufferSize, "   ?");
+        snprintf(buffer, bufferSize, "  ?");
     } else if (ppb > 999999) {
-        snprintf(buffer, bufferSize, ">10k");
+        snprintf(buffer, bufferSize, ">9k");
     } else if (ppb > 9999) {
-        snprintf(buffer, bufferSize, "%4ld", (ppb / 100));
-    } else if (ppb > 999) {
-        snprintf(buffer, bufferSize, "%ld.%01ld", ppb / 100, ((ppb % 100)/10));
+        snprintf(buffer, bufferSize, "%3ld", (ppb / 100));
+    } else if (ppb >= 1000) {
+        // >= 10.0 PPB: show as ##. (3 chars)
+        snprintf(buffer, bufferSize, "%2ld.", ppb / 100);
+    } else if (ppb >= 100) {
+        // 1.0 - 9.9 PPB: show as #.# (3 chars)
+        snprintf(buffer, bufferSize, "%ld.%01ld", ppb / 100, (ppb % 100) / 10);
     } else {
-        snprintf(buffer, bufferSize, "%ld.%01ld", ppb / 100, (ppb % 100)/10);
+        // < 1.0 PPB: show as .## (3 chars, full resolution)
+        snprintf(buffer, bufferSize, ".%02ld", ppb);
     }
 }
 
