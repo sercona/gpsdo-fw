@@ -1695,24 +1695,17 @@ void menu_run()
         if(frequency_is_stable(0))
         {   // Frequency is stabilized
             // Save PWM if requested
-            bool did_pwm = false;
-            bool did_pps = false;
             if(pwm_auto_save && !auto_save_pwm_done)
             {
                 ee_storage.pwm = TIM1->CCR2;
                 on_config_changed();
-                // Only auto-save once per session
                 auto_save_pwm_done = true;
-                did_pwm = true;
             }
             if(pps_ppm_auto_sync && !auto_sync_pps_done)
             {
                 sync_pps_out = true;
-                // Only auto-sync once per session
                 auto_sync_pps_done = true;
-                did_pps = true;
             }
-            // Notifications suppressed - no popup on autosave or PPS sync
         }
         bool new_ppb_lock_status = frequency_is_stable(ppb_lock_threshold);
         if(ppb_lock_status != new_ppb_lock_status )

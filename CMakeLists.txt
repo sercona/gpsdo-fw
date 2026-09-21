@@ -29,7 +29,7 @@ message("Build type: " ${CMAKE_BUILD_TYPE})
 
 # Define EEPROM_AUTO_SAVE
 if(NOT DEFINED EEPROM_AUTO_SAVE)
-  set(EEPROM_AUTO_SAVE "1")
+  set(EEPROM_AUTO_SAVE "0")
 endif()
 
 if(EEPROM_AUTO_SAVE STREQUAL "1")
