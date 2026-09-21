@@ -951,8 +951,7 @@ static void menu_draw()
         if(menu_level == 0)
         {
             LCD_Puts(2, 0, "Vers.");
-            // old: Add "/S" (Autosave feature enabled") or "/N" (no autosave)
-	    // new: autosave by default and show modified version string, to be clear to the user
+            // Add "/S" (Autosave feature enabled") or "/N" (no autosave)
             snprintf(screen_buffer, SCREEN_BUFFER_SIZE, "%s/lw", FIRMWARE_VERSION);
             LCD_Puts(0, 1, screen_buffer);
         }
@@ -1710,25 +1709,19 @@ void menu_run()
             }
             if(did_pps && did_pwm)
             {
-	      //LCD_Clear();
-                //LCD_Puts(0, 0, "PPS&PWM ");
-                //LCD_Puts(0, 1, " DONE!  ");
+                LCD_Puts(0, 0, "PPS&PWM ");
+                LCD_Puts(0, 1, " DONE!  ");
             }
             else if(did_pps)
             {
-	      //LCD_Clear();
-                //LCD_Puts(0, 0, "  PPS   ");
-                //LCD_Puts(0, 1, "SYNCED! ");
+                LCD_Puts(0, 0, "  PPS   ");
+                LCD_Puts(0, 1, "SYNCED! ");
             }
             else if(did_pwm)
             {
-                LCD_Clear();
                 LCD_Puts(0, 0, "  PWM   ");
                 LCD_Puts(0, 1, EEPROM_AUTO_SAVE ? " SAVED! " : "  SET!  ");
             }
-            //HAL_Delay(1500);   // getting in the way, not needed
-            //LCD_Clear();
-            menu_force_redraw();
         }
         bool new_ppb_lock_status = frequency_is_stable(ppb_lock_threshold);
         if(ppb_lock_status != new_ppb_lock_status )
